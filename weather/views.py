@@ -18,10 +18,15 @@ def index(request):
             existing_city_count = City.objects.filter(name=new_city).count()
             
             if existing_city_count == 0:
-                form.save()
+                r = requests.get(url.format(new_city, api_key)).json()
+                if r['cod'] == 200:
+                    form.save()
+                else:
+                    err_msg = 'City does not exist in the world!'
             else:
                 err_msg = 'City already exists in the database!'
 
+    print(err_msg)
     form = CityForm()
 
     cities = City.objects.all()
